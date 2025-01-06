@@ -2,7 +2,7 @@ console.log("Welcome to our todo app");
 
 let todos = [];
 
-let todoDataSection = document.getElementById("todo-data");
+let todoDataList = document.getElementById("todo-data-list");
 let saveButton = document.getElementById("saveTodo");
 let todoInputBar = document.getElementById("todo-input-bar");
 
@@ -27,6 +27,19 @@ saveButton.addEventListener('click',function getTextAndAdd() {
 })
 
 
+function removeTodo(event) {
+    //event.target.parentElement.parentElement.parentElement.remove();
+
+    let deleteBtnPressed = event.target;
+    let indexToBeRemoved = Number(deleteBtnPressed.getAttribute('todo-idx'));
+    todos.splice(indexToBeRemoved,1);
+    todoDataList.innerHTML = '';
+    todos.forEach((ele,idx) => {
+        addTodo(ele,idx+1);
+    });
+}
+
+
 function addTodo(todoData, todoCount) {
     let rowDiv     = document.createElement('div');
     let todoItem   = document.createElement('div');
@@ -46,9 +59,12 @@ function addTodo(todoData, todoCount) {
     todoDetail.classList.add("todo-details", "text-muted");
     todoStatus.classList.add("todo-status", "text-muted");
     todoAction.classList.add("todo-action", "d-flex" ,"justify-content-start", "gap-2");
-    deleteBtn.classList.add("btn", "btn-danger");
-    finishedBtn.classList.add("btn", "btn-success");
+    deleteBtn.classList.add("btn", "btn-danger", "delete-todo");
+    finishedBtn.classList.add("btn", "btn-success", "finish-todo");
 
+
+    deleteBtn.setAttribute("todo-idx",todoCount-1);
+    deleteBtn.onclick = removeTodo;
     
     todoNumber.textContent = `${todoCount}.`;
     todoDetail.textContent = todoData;
@@ -68,5 +84,5 @@ function addTodo(todoData, todoCount) {
     rowDiv.appendChild(todoItem);
     rowDiv.appendChild(hr);
 
-    todoDataSection.appendChild(rowDiv);
+    todoDataList.appendChild(rowDiv);
 }
